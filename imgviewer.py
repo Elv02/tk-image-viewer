@@ -49,14 +49,14 @@ class ImageViewer:
         edit_menu = Menu(menubar)
         menubar.add_cascade(label="Edit", menu=edit_menu)
 
-        edit_menu.add_command(label = "Rotate Image 90 Deg Clockwise", 
+        edit_menu.add_command(label = "Rotate Image 90 Deg Clockwise",
             command=partial(self.rotate_image, DIR_RIGHT))
         edit_menu.add_command(label = "Rotate Image 90 Deg Counterclockwise",
             command=partial(self.rotate_image, DIR_LEFT))
         edit_menu.add_separator()
-        edit_menu.add_command(label = "Flip Image Vertically", 
+        edit_menu.add_command(label = "Flip Image Vertically",
             command=partial(self.rotate_image, FLIP_VERTICAL))
-        edit_menu.add_command(label = "Flip Image Horizontally", 
+        edit_menu.add_command(label = "Flip Image Horizontally",
             command=partial(self.rotate_image, FLIP_HORIZONTAL))
 
         info_menu = Menu(menubar)
@@ -113,13 +113,13 @@ class ImageViewer:
         """
             Rotate the currently loaded image Clockwise (Right) or Counterclockwise (left).
         """
-        self.raise_alert(NYI, type=ALERT_WARNING)
+        self.raise_alert(NYI, alert_type=ALERT_WARNING)
 
     def flip_image(self, direction: int) -> None:
         """
             Mirror the currently loaded image over the vertical or horizontal axis.
         """
-        self.raise_alert(NYI, type=ALERT_WARNING)
+        self.raise_alert(NYI, alert_type=ALERT_WARNING)
 
     def open_image(self) -> None:
         """
@@ -153,7 +153,7 @@ class ImageViewer:
         """
             Prompt the user to save the currently viewed image.
         """
-        self.raise_alert(NYI, type=ALERT_WARNING)
+        self.raise_alert(NYI, alert_type=ALERT_WARNING)
 
     def collect_image_refs(self) -> None:
         """
@@ -175,15 +175,15 @@ class ImageViewer:
                 return True
         return False
 
-    def raise_alert(self, msg: str, type = ALERT_INFO) -> None:
+    def raise_alert(self, msg: str, alert_type = ALERT_INFO) -> None:
         """
             Open alert pop up in the event there is an issue
         """
-        if type == ALERT_INFO:
+        if alert_type == ALERT_INFO:
             messagebox.showinfo(title = "Info", message = msg)
-        elif type == ALERT_WARNING:
+        elif alert_type == ALERT_WARNING:
             messagebox.showwarning(title = "Warning", message = msg)
-        elif type == ALERT_ERROR:
+        elif alert_type == ALERT_ERROR:
             messagebox.showerror(title = "Error", message = msg)
         else:
             raise ValueError("Invalid alert type!")
