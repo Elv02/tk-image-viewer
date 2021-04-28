@@ -9,7 +9,7 @@ from functools import partial
 
 from tkinter import Menu, Tk, Button, Label, messagebox
 from tkinter.filedialog import askdirectory, askopenfilename
-from PIL import ImageTk
+from PIL import ImageTk, Image
 
 DIR_LEFT = 0
 DIR_RIGHT = 1
@@ -55,9 +55,9 @@ class ImageViewer:
             command=partial(self.rotate_image, DIR_LEFT))
         edit_menu.add_separator()
         edit_menu.add_command(label = "Flip Image Vertically",
-            command=partial(self.rotate_image, FLIP_VERTICAL))
+            command=partial(self.flip_image, FLIP_VERTICAL))
         edit_menu.add_command(label = "Flip Image Horizontally",
-            command=partial(self.rotate_image, FLIP_HORIZONTAL))
+            command=partial(self.flip_image, FLIP_HORIZONTAL))
 
         info_menu = Menu(menubar)
         menubar.add_cascade(label = "Info", menu=info_menu)
@@ -113,13 +113,30 @@ class ImageViewer:
         """
             Rotate the currently loaded image Clockwise (Right) or Counterclockwise (left).
         """
-        self.raise_alert(NYI, alert_type=ALERT_WARNING)
+        rotated_img = ImageTk.getimage(self.curr_img)
+        if direction == DIR_LEFT:
+            rotated_img = rotated_img.rotate(90, expand = True)
+        elif direction == DIR_RIGHT:
+            rotated_img = rotated_img.rotate(-90, expand = True)
+        else:
+            self.raise_alert("ERROR: Cannot perform rotation operation.")
+        self.curr_img = ImageTk.PhotoImage(rotated_img)
+        self.img_label.configure(image = self.curr_img)
 
     def flip_image(self, direction: int) -> None:
         """
             Mirror the currently loaded image over the vertical or horizontal axis.
         """
-        self.raise_alert(NYI, alert_type=ALERT_WARNING)
+        flipped_img = ImageTk.getimage(self.curr_img)
+        if direction == FLIP_HORIZONTAL:
+            flipped_img = flipped_img.transpose(Image.FLIP_LEFT_RIGHT)
+        elif direction == FLIP_VERTICAL:
+            flipped_img = flipped_img.transpose(Image.FLIP_TOP_BOTTOM)
+        else:
+            self.raise_alert("ERROR: Cannot perform rotation operation.")
+        self.curr_img = ImageTk.PhotoImage(flipped_img)
+        self.img_label.configure(image = self.curr_img)
+
 
     def open_image(self) -> None:
         """
