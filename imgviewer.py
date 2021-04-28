@@ -7,7 +7,7 @@ import os
 
 from functools import partial
 
-from tkinter import Menu, Tk, Button, Label, messagebox
+from tkinter import Menu, Tk, Button, Label, Toplevel, messagebox
 from tkinter.filedialog import askdirectory, askopenfilename
 from PIL import ImageTk, Image
 
@@ -62,8 +62,10 @@ class ImageViewer:
         info_menu = Menu(menubar)
         menubar.add_cascade(label = "Info", menu=info_menu)
 
-        info_menu.add_command(label = "Image Details")
-        info_menu.add_command(label = "About")
+        info_menu.add_command(label = "Image Details",
+            command=self.show_img_info)
+        info_menu.add_command(label = "About",
+            command=self.show_about_info)
         info_menu.add_command(label = "Help")
 
         # TODO: Initialize an 'empty image' as placeholder while waiting for the user to view theirs
@@ -137,7 +139,6 @@ class ImageViewer:
         self.curr_img = ImageTk.PhotoImage(flipped_img)
         self.img_label.configure(image = self.curr_img)
 
-
     def open_image(self) -> None:
         """
             Listener for open image button.
@@ -191,6 +192,39 @@ class ImageViewer:
             if file_path.endswith(ext):
                 return True
         return False
+
+    def show_img_info(self) -> None:
+        """
+            Listener for image info button.
+            Displays basic information about the currently visible image in a pop up.
+            TODO: Implement this!
+        """
+        win = Toplevel()
+
+        win.title("Image Details")
+
+        label = Label(win, text="Image details go here.")
+        label.pack(fill='x', padx=64, pady=8)
+
+        button_done = Button(win, text="Done", command=win.destroy)
+        button_done.pack(fill='x')
+
+    def show_about_info(self) -> None:
+        """
+            Listener for image info button.
+            Displays basic information about the currently visible image in a pop up.
+            TODO: Implement this!
+        """
+        win = Toplevel()
+
+        win.title("About Tk Image Viewer")
+
+        label = Label(win, text="Image Viewer written in Python using Tkinter.\n \
+            Program written by Warren Hoeft, April 28th 2021.")
+        label.pack(fill='x', padx=64, pady=8)
+
+        button_done = Button(win, text="Done", command=win.destroy)
+        button_done.pack(fill='x')
 
     def raise_alert(self, msg: str, alert_type = ALERT_INFO) -> None:
         """

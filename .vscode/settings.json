@@ -6,5 +6,9 @@
         "dir",
         "exts",
         "valid"
+    ],
+    "cSpell.words": [
+        "padx",
+        "pady"
     ]
 }
