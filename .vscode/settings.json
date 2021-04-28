@@ -1,0 +1,10 @@
+{
+    "python.linting.pylintEnabled": true,
+    "python.linting.enabled": true,
+    "cSpell.ignoreWords": [
+        "curr",
+        "dir",
+        "exts",
+        "valid"
+    ]
+}
