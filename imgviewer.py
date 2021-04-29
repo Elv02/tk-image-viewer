@@ -21,6 +21,8 @@ ALERT_INFO = 0
 ALERT_WARNING = 1
 ALERT_ERROR = 2
 
+HEADER = "Tk Image Viewer - "
+
 NYI = "Not yet Implemented!"
 CREDITS = "Image Viewer written in Python using Tkinter.\n\
 Program written by Warren Hoeft, April 28th 2021."
@@ -80,10 +82,16 @@ class ImageViewer:
             command=self.show_help_info)
 
         # TODO: Initialize an 'empty image' as placeholder while waiting for the user to view theirs
-        self.curr_dir = "./images/"
-        self.curr_img = ImageTk.PhotoImage(file = "./images/7Days.jpg")
+        self.curr_dir = "./images"
         self.curr_dir_images = []
+        
+        self.collect_image_refs()
+
         self.curr_img_index = 0
+        self.curr_img = ImageTk.PhotoImage(file = self.curr_dir_images[self.curr_img_index])
+        title = HEADER + self.curr_dir_images[self.curr_img_index]
+        self.root.title(title)
+
         self.img_label = Label(self.root, image = self.curr_img)
         self.img_label.pack()
 
@@ -95,7 +103,6 @@ class ImageViewer:
             command=partial(self.cycle_image, DIR_RIGHT))
         button_right.pack()
 
-        self.collect_image_refs()
 
     def start_viewer(self) -> None:
         """
@@ -121,6 +128,8 @@ class ImageViewer:
 
         self.curr_img = ImageTk.PhotoImage(file = self.curr_dir_images[self.curr_img_index])
         self.img_label.configure(image = self.curr_img)
+        title = HEADER + self.curr_dir_images[self.curr_img_index]
+        self.root.title(title)
 
     def rotate_image(self, direction: int) -> None:
         """
@@ -161,6 +170,8 @@ class ImageViewer:
         self.curr_dir = os.path.dirname(img_filepath)
         self.curr_img = ImageTk.PhotoImage(file = img_filepath)
         self.img_label.configure(image = self.curr_img)
+        title = HEADER + img_filepath
+        self.root.title(title)
 
         self.collect_image_refs()
 
@@ -177,6 +188,8 @@ class ImageViewer:
         self.curr_img_index = 0
         self.curr_img = ImageTk.PhotoImage(file = self.curr_dir_images[self.curr_img_index])
         self.img_label.configure(image = self.curr_img)
+        title = HEADER + self.curr_dir_images[self.curr_img_index]
+        self.root.title(title)
 
     def save_image(self) -> None:
         """
@@ -193,7 +206,6 @@ class ImageViewer:
         else:
             img_to_save = ImageTk.getimage(self.curr_img)
             img_to_save.save(new_img_path)
-
 
     def collect_image_refs(self) -> None:
         """
@@ -225,7 +237,13 @@ class ImageViewer:
 
         win.title("Image Details")
 
-        label = Label(win, text="Image details go here.")
+        img = ImageTk.getimage(self.curr_img)
+
+        label_text = ""
+        label_text += "Image Mode: " + img.mode + "\n"
+        label_text += "Image Dimensions: " + str(img.size) + "\n"
+
+        label = Label(win, text=label_text)
         label.pack(fill='x', padx=64, pady=8)
 
         button_done = Button(win, text="Done", command=win.destroy)
@@ -273,7 +291,6 @@ class ImageViewer:
             messagebox.showerror(title = "Error", message = msg)
         else:
             raise ValueError("Invalid alert type!")
-
 
 def main():
     """
