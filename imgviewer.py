@@ -8,7 +8,7 @@ import os
 from functools import partial
 
 from tkinter import Menu, Tk, Button, Label, Toplevel, messagebox
-from tkinter.filedialog import askdirectory, askopenfilename
+from tkinter.filedialog import askdirectory, askopenfilename, asksaveasfilename
 from PIL import ImageTk, Image
 
 DIR_LEFT = 0
@@ -182,7 +182,18 @@ class ImageViewer:
         """
             Prompt the user to save the currently viewed image.
         """
-        self.raise_alert(NYI, alert_type=ALERT_WARNING)
+        new_img_path = asksaveasfilename(title = "Where would you like to save this image?",
+            filetypes = [("PNG Image", '*.png'), ("JPEG Image", '*.jpg'), ("Bitmap Image", '*.bmp'),\
+                ("GIF Image", '*.gif'), ("Icon Image", '*.ico')],
+            initialdir = self.curr_dir)
+
+        if new_img_path.endswith(".jpg"):
+            img_to_save = ImageTk.getimage(self.curr_img).convert('RGB')
+            img_to_save.save(new_img_path)
+        else:
+            img_to_save = ImageTk.getimage(self.curr_img)
+            img_to_save.save(new_img_path)
+
 
     def collect_image_refs(self) -> None:
         """
