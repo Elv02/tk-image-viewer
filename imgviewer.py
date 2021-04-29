@@ -22,6 +22,16 @@ ALERT_WARNING = 1
 ALERT_ERROR = 2
 
 NYI = "Not yet Implemented!"
+CREDITS = "Image Viewer written in Python using Tkinter.\n\
+Program written by Warren Hoeft, April 28th 2021."
+HELP = "To open a new image, use File -> Open Image.\n\n\
+To open a folder, use File -> Open Folder.\n\
+Note when opening a folder that the first image in the folder will be displayed.\n\n\
+You can cycle through any images in the currently active folder\n\
+(either opened or where the currently open image is stored) by using the Next Image and Previous Image buttons.\n\n\
+Use the Edit menu to perform basic image transformations.\n\n\
+To save a transformed image (or save a copy of the current image elsewhere), use File -> Save Image.\n\n\
+For more information, please check the README.md file distributed with this program."
 
 class ImageViewer:
     """
@@ -66,7 +76,8 @@ class ImageViewer:
             command=self.show_img_info)
         info_menu.add_command(label = "About",
             command=self.show_about_info)
-        info_menu.add_command(label = "Help")
+        info_menu.add_command(label = "Help",
+            command=self.show_help_info)
 
         # TODO: Initialize an 'empty image' as placeholder while waiting for the user to view theirs
         self.curr_dir = "./images/"
@@ -211,16 +222,29 @@ class ImageViewer:
 
     def show_about_info(self) -> None:
         """
-            Listener for image info button.
-            Displays basic information about the currently visible image in a pop up.
-            TODO: Implement this!
+            Listener for about button.
+            Displays program credits in new window.
         """
         win = Toplevel()
 
         win.title("About Tk Image Viewer")
 
-        label = Label(win, text="Image Viewer written in Python using Tkinter.\n \
-            Program written by Warren Hoeft, April 28th 2021.")
+        label = Label(win, text=CREDITS)
+        label.pack(fill='x', padx=64, pady=8)
+
+        button_done = Button(win, text="Done", command=win.destroy)
+        button_done.pack(fill='x')
+
+    def show_help_info(self) -> None:
+        """
+            Listener for help button.
+            Displays basics usage instructions.
+        """
+        win = Toplevel()
+
+        win.title("Help Window")
+
+        label = Label(win, text=HELP)
         label.pack(fill='x', padx=64, pady=8)
 
         button_done = Button(win, text="Done", command=win.destroy)

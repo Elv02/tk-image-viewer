@@ -26,5 +26,18 @@ Run the script with your Python interpreter.  For example, with a CLI you might 
 
 Written by Warren Hoeft on April 28th 2021.
 
-[^1]: You can install this with pip: 
-[^2]: You can install this with pip: 
+---
+
+[^1]: You can install Tkinter with pip:  
+
+```
+python3 -m pip install --upgrade pip  
+python3 -m pip install --upgrade tk
+```
+
+[^2]: You can install Pillow with pip:
+
+```
+python3 -m pip install --upgrade pip  
+python3 -m pip install --upgrade Pillow
+```
