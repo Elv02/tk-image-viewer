@@ -8,6 +8,7 @@ import os
 from functools import partial
 
 from tkinter import Menu, Tk, Button, Label, Toplevel, messagebox
+from tkinter.constants import E, W
 from tkinter.filedialog import askdirectory, askopenfilename, asksaveasfilename
 from PIL import ImageTk, Image
 
@@ -41,9 +42,18 @@ class ImageViewer:
         Supports controls for opening and cycling between images.
     """
     def __init__(self) -> None:
+        """
+            Initialize a new ImageViewer Window.
+            Sets up all the UI elements and class properties.
+        """
         self.root = Tk()
         self.root.title("Image Viewer")
         self.root.iconphoto(False, ImageTk.PhotoImage(file = "./images/icon.png"))
+
+        self.root.attributes('-zoomed', True)
+        self.root.bind("<Escape>", self.exit_fs)
+        self.root.bind("<F11>", self.toggle_fs)
+        self.is_fs = False
 
         menubar = Menu(self.root)
         self.root.configure(menu = menubar)
@@ -84,7 +94,7 @@ class ImageViewer:
         # TODO: Initialize an 'empty image' as placeholder while waiting for the user to view theirs
         self.curr_dir = "./images"
         self.curr_dir_images = []
-        
+
         self.collect_image_refs()
 
         self.curr_img_index = 0
@@ -93,16 +103,19 @@ class ImageViewer:
         self.root.title(title)
 
         self.img_label = Label(self.root, image = self.curr_img)
-        self.img_label.pack()
+        self.img_label.grid(column = 0, row = 0, columnspan = 2)
 
         button_left = Button(self.root, text = "Previous Image",
             command=partial(self.cycle_image, DIR_LEFT))
-        button_left.pack()
+        button_left.grid(column = 0, row = 1, sticky = E, padx = 32, pady = 4)
 
         button_right = Button(self.root, text = "Next Image",
             command=partial(self.cycle_image, DIR_RIGHT))
-        button_right.pack()
+        button_right.grid(column = 1, row = 1, sticky = W, padx = 32, pady = 4)
 
+        self.status_bar = Label(self.root, text = str("Image " + str(self.curr_img_index + 1) +\
+            " of " + str(len(self.curr_dir_images))))
+        self.status_bar.grid(column = 0, row = 2, columnspan = 2)
 
     def start_viewer(self) -> None:
         """
@@ -130,6 +143,9 @@ class ImageViewer:
         self.img_label.configure(image = self.curr_img)
         title = HEADER + self.curr_dir_images[self.curr_img_index]
         self.root.title(title)
+        status = str("Image " + str(self.curr_img_index + 1) +\
+            " of " + str(len(self.curr_dir_images)))
+        self.status_bar.configure(text = status)
 
     def rotate_image(self, direction: int) -> None:
         """
@@ -175,6 +191,10 @@ class ImageViewer:
 
         self.collect_image_refs()
 
+        status = str("Image " + str(self.curr_img_index + 1) +\
+            " of " + str(len(self.curr_dir_images)))
+        self.status_bar.configure(text = status)
+
     def open_folder(self) -> None:
         """
             Listener for open folder button.
@@ -190,6 +210,10 @@ class ImageViewer:
         self.img_label.configure(image = self.curr_img)
         title = HEADER + self.curr_dir_images[self.curr_img_index]
         self.root.title(title)
+
+        status = str("Image " + str(self.curr_img_index + 1) +\
+            " of " + str(len(self.curr_dir_images)))
+        self.status_bar.configure(text = status)
 
     def save_image(self) -> None:
         """
@@ -278,6 +302,22 @@ class ImageViewer:
 
         button_done = Button(win, text="Done", command=win.destroy)
         button_done.pack(fill='x')
+
+    # pylint: disable=unused-argument
+    def exit_fs(self, event = None) -> None:
+        """
+            Exit fullscreen mode.
+        """
+        self.is_fs = False
+        self.root.attributes("-fullscreen", self.is_fs)
+
+    # pylint: disable=unused-argument
+    def toggle_fs(self, event = None) -> None:
+        """
+            Switch between windowed and fullscreen modes.
+        """
+        self.is_fs = not self.is_fs
+        self.root.attributes("-fullscreen", self.is_fs)
 
     def raise_alert(self, msg: str, alert_type = ALERT_INFO) -> None:
         """
